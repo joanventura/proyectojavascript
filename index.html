@@ -1,10 +1,31 @@
 <html>
 <head>
 	<title>Hello, World!</title>
+	
+	<script type="text/javascript">
+		function ciclo(hasta){
+			var suma=0;
+			suma=(hasta+1)*(hasta/2);
+			/*for(var i=1;i<=hasta;i++){
+				suma=suma+i;
+			}*/
+			console.log(suma);
+		};
+		
+		
+		
+		function recorrer(){
+			var  numero = document.getElementById('numero').value;
+			ciclo(numero);
+			console.log(numero);
+		};
+		
+	</script>
 </head>
 <body>
 
-Hola Joan
+	<input id="numero" type="text">
+	<button type="type" onclick="recorrer()">Correr</button>
 
 </body>
 </html>
