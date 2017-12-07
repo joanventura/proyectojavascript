@@ -17,7 +17,7 @@ function agregarEstudiante(estudiante){
 			+ "<td>" + estudiante.identificacion + "</td>"
 			+ "<td>" + estudiante.telefono + "</td>"
 			+ "<td>" + estudiante.email + "</td>"
-			+ "<td>" + '<button id="borrar'+estudiante.id+'" name="borrar" class="btn btn-danger btn-xs">X</button>'+ "</td>"
+			+ "<td  id="+estudiante.id+">" + '<button name="borrar" class="btn btn-danger btn-xs">X</button>'+ "</td>"
 		+ "</tr>";
 		
 	$("table tbody").append(rowEstudiante);
