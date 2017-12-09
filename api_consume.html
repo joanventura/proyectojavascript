@@ -65,20 +65,24 @@
 			}else{
 			   imgSource="resources/img/unclick.jpg";
 			}
+		
+			var rowPost='<div class="row media-list">'+
+							'<div class="col-md-12">' +
+									'<div class="media card-md">' +
+										'<input data-myval="'+ post.id + '" type="image" class="mr-3" src="'+imgSource+'" alt="Favorite" style="width: 32px; height: 32px;" data-holder-rendered="true"/>' +
+										'<div class="media-body">' +
+											'<h4 class="media-heading">'+ post.titulo + '</h4>' +
+											  post.body +
+											'<h6 class="text-right">Author: '+ post.usuario +' </h6>' +
+										'</div>' +
+									'</div>' +
+								'</div>'+
+							'</div>'+
+						  '<hr>'; 
+			
 
-			 content += 
-				'<div class="col-md-12">' +
-					'<div class="media card-md">' +
-				 		'<input data-myval="'+ post.id + '" type="image" class="mr-3" src="'+imgSource+'" alt="Favorite" style="width: 32px; height: 32px;" data-holder-rendered="true"/>' +
-						'<div class="media-body">' +
-							'<h5 class="mt-0">'+ post.titulo + '</h5>' +
-							  post.body +
-							'<h6 class="text-right">Author: '+ post.usuario +' </h6>' +
-						'</div>' +
-					'</div>' +
-				'</div>'; 	
 
-				$('#content').html(content);
+				$('#contenido').append(rowPost);
 		};
 		
 		
@@ -201,19 +205,11 @@
 	</div>
 
 
-	<div class="container">
+	<div class="container" id="contenido">
 		
-		<div class="row media-list mt-3" id="content">
-
-
-
-		</div>
+		
 
 	</div>
-
-
-
-    	
 
 
 </body>
