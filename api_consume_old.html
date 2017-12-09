@@ -1,0 +1,183 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+	<title>Consume Posts</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="resources/css/bootstrap.min.css">
+	<script src="resources/js/jquery-3.2.1.min.js"></script>
+	<script src="resources/js/bootstrap.min.js"></script>
+	
+	<script>
+		var Post = function(){
+			var self = this;
+			self.id="";
+			self.usuario="";
+			self.titulo="";
+			self.body="";
+		};
+		
+		var Usuario = function(){
+			var self = this;
+			self.userId="";
+			self.name="";
+			self.email="";
+		};
+		
+		function buscarUsuario(userID) {
+		
+			var root = 'https://jsonplaceholder.typicode.com';
+		
+			$.ajax({
+				url: root + '/users/'+userID,
+				method: 'GET'
+			}).then(function(dataUsers) {
+			
+				var usuario= new Usuario()
+				
+				usuario.userId=dataUsers.id;
+				usuario.name=dataUsers.name;
+				usuario.email=dataUsers.email;
+				
+				return usuario;
+			});
+
+		}
+		
+		function agregarPost(post){
+			var rowpost = 
+				"<tr>"
+					+ "<td colspan=2>Titulo" + post.titulo + "</td>"
+					+ "<td> <img src=\"resources/img/star.png\" alt=\"Favorite\" height=\"42\" width=\"42\"> </td>"
+				+ "</tr>"
+				+ "<tr>"
+					+ "<td colspan=\"3\">" + post.body + "</td>"
+				+ "</tr>"
+				+ "<tr>"
+					+ "<td></td>"
+					+ "<td></td>"
+					+ "<td>" + post.usuario + "</td>"
+				+ "</tr>";
+				
+			$("table tbody").append(rowpost);
+		};
+	
+		$(document).ready(function(){
+			$('#search').click(function(){
+				var id = $('#searchid').val();
+
+				var root = 'https://jsonplaceholder.typicode.com';
+				$.ajax({
+					url: root + '/posts/'+id,
+					method: 'GET'
+				}).then(function(data) {
+					var id=data.Id;
+					var userID = data.userId;
+					var title = data.title;
+					var body = data.body;
+					
+					var user= new Usuario();
+					user=buscarUsuario(userID);
+					
+					var post= new Post()
+					post.id=id;
+					post.usuario=user.email+"("+user.name+")";	
+					post.titulo=title;
+					post.body=body;
+					
+					agregarPost(post);
+				});
+				
+				
+			});
+		});
+	</script>	
+	
+</head>
+
+<body>
+
+
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg-2"></div>
+	<div class="col-lg-8">
+		<h1>Registro de Estudiantes</h1><br>
+
+		<!-- Search input-->
+		<div class="form-group">
+		  <label class="col-md-4 control-label" for="searchid">Search ID</label>
+		  <div class="col-md-2">
+			<input id="searchid" name="searchid" placeholder="ID" class="form-control input-md" type="search">
+		  </div>
+		</div>
+
+   </div>
+    <div class="col-lg-2"></div>
+  </div>
+   
+   <div class="row">
+    <div class="col-lg-2"></div>
+	<div class="col-lg-8">	
+
+		<!-- Search input-->
+		<div class="form-group">
+		  <label class="col-md-4 control-label" for="userId">Search User</label>
+		  <div class="col-md-2">
+			<input id="userId" name="userId" placeholder="User" class="form-control input-md" type="search">
+		  </div>
+		</div>
+		
+	</div>
+    <div class="col-lg-2"></div>
+  </div>
+  
+  <div class="row">
+    <div class="col-lg-2"></div>
+	<div class="col-lg-8">	
+
+		<!-- Search input-->
+		<div class="form-group">
+		  <label class="col-md-4 control-label" for="tile">Search Title</label>
+		  <div class="col-md-2">
+			<input id="title" name="tile" placeholder="Title" class="form-control input-md" type="search">
+		  </div>
+		</div>
+		
+	</div>
+    <div class="col-lg-2"></div>
+  </div>
+		
+  <div class="row">
+    <div class="col-lg-2"></div>
+	<div class="col-lg-6"><!-- Button -->
+		<div class="form-group">
+		  <label class="col-md-4 control-label" for="search"></label>
+		  <div class="col-md-4">
+			<button id="search" name="search" class="btn btn-info">Search</button>
+		  </div>
+		</div></div>
+	<div class="col-lg-4"></div>
+  </div>
+
+
+ <div class="row">
+    <div class="col-lg-1"></div>
+	<div class="col-lg-10">
+	  <table id="posts" class="table table-condensed table-striped table-hover">
+		<tbody>
+		</tbody>
+	  </table>
+	</div>
+	<div class="col-lg-1"></div>
+  </div>
+
+
+
+</body>
+	
+</html>
+
+

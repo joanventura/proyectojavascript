@@ -17,7 +17,7 @@ function agregarEstudiante(estudiante){
 			+ "<td>" + estudiante.identificacion + "</td>"
 			+ "<td>" + estudiante.telefono + "</td>"
 			+ "<td>" + estudiante.email + "</td>"
-			+ "<td  id="+estudiante.id+">" + '<button name="borrar" class="btn btn-danger btn-xs">X</button>'+ "</td>"
+			+ "<td>" + '<button data-id="'+estudiante.id+'" class="btn btn-danger btn-xs">X</button>'+ "</td>"
 		+ "</tr>";
 		
 	$("table tbody").append(rowEstudiante);
@@ -34,6 +34,29 @@ function guardarDB(estudiante){
 	}
 	
 	estudiantes.push(estudiante);
+	myStorage.setItem("estudiantes", JSON.stringify(estudiantes));
+};
+
+function borrarDB(idEst){
+	myStorage = window.localStorage;
+	
+	var estudiantes = [];
+	
+	var est1= new Estudiante();
+	
+	var dbEstudiantes = myStorage.getItem('estudiantes');
+	if(dbEstudiantes!=null){
+		estudiantes = JSON.parse(dbEstudiantes);
+		
+		$.each(estudiantes, function(i,est){
+			if(est.id==idEst){
+				est1=est;
+			}
+		});
+	}
+	
+	estudiantes.splice(estudiantes.indexOf(est1), 1);
+	
 	myStorage.setItem("estudiantes", JSON.stringify(estudiantes));
 };
 		
@@ -69,11 +92,10 @@ $(document).ready(function(){
 		guardarDB(est);
 	});
 	
-	$('#borrar').click(function() {
-	
-		var rowIndex = $("#estudiantes TR").index();
-
-		alert( rowIndex );  // alert the index number of the clicked row.
-
+	$('.btn-danger').click(function() {
+		var rowIndex = $(this).data('id');
+		var row = $(this).parents('tr');
+		$(row).remove();
+		borrarDB(rowIndex);
 	});
 });
