@@ -98,7 +98,7 @@
 			var dbPosts = mySessionStorage.getItem('posts');
 			var dbFavoritos = myLocalStorage.getItem('favoritos');
 			var root = 'https://jsonplaceholder.typicode.com';
-			
+
 			if(dbUsuarios==null){
 
 				$.ajax({
@@ -106,7 +106,6 @@
 					method: 'GET'
 				}).then(function(dataUsers) {
 					mySessionStorage.setItem("usuarios", JSON.stringify(dataUsers));
-
 				});
 			}
 			
@@ -117,7 +116,6 @@
 					method: 'GET'
 				}).then(function(dataPosts) {
 					mySessionStorage.setItem("posts", JSON.stringify(dataPosts));
-
 				});
 			}
 			
@@ -160,13 +158,11 @@
 					favoritos = JSON.parse(dbFavoritos);
 				}
 				
-				if(favoritos.indexOf(clickFavorito)>=0){
-					favoritos.splice(favoritos.indexOf(clickFavorito), 1);
+				existe=favoritos.indexOf(clickFavorito);
+				if(existe>=0){
+					favoritos.splice(existe, 1);
 					$(this).attr("src","resources/img/unclick.jpg");
-					existe=1;
-				}
-
-				if(existe==0){
+				}else{
 					favoritos.push(clickFavorito);
 					$(this).attr("src","resources/img/clicked.jpg");
 				}
