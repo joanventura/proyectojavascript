@@ -65,12 +65,12 @@ function agregarPost(post){
 		  
 	var rowPost = '<div class="row">'+
 						'<div class="col-md-12">'+
-							'<h3 data-toggle="modal" data-target="#postModal" data-idPost="'+post.id+'">'+post.titulo+'</h3>'+
+							'<h3 data-toggle="modal" class="open-PostModal" data-idpost="'+post.id+'">'+post.titulo+'</h3>'+
 						'</div>'+	
 					'</div>'+
 					'<div class="row">'+ 
 						'<div class="col-md-10">'+
-							'<a class="publicador" data-toggle="modal" data-target="#usuarioModal" data-userId="'+post.userId+'">'+
+							'<a data-toggle="modal" class="open-UsuarioModal" data-userid="'+post.userId+'">'+
 								'<span class="glyphicon glyphicon-user" ></span>'+post.usuario+' - <span class="glyphicon glyphicon-envelope"></span>'+post.usuario+
 							'</a>'+
 						'</div>'+
@@ -155,23 +155,20 @@ function botonFavorito(){
 	});
 }
 
-function openModalUsuario(
-	$(document).ready(function () {
-		$(".open-usuarioModal").click(function () {
-			$('#bookId').val($(this).data('userId'));
-			$('#usuarioModal').modal('show');
-		});
+function openModalUsuario(){
+	$(".open-UsuarioModal").click(function () {
+		$('.modal-body #bookId').val($(this).data('userid'));
+		$('#usuarioModal').modal('show');
 	});
-);
 
-function openModalPost(
-	$(document).ready(function () {
-		$(".open-postModal").click(function () {
-			$('#bookId').val($(this).data('idPost'));
-			$('#postModal').modal('show');
-		});
+};
+
+function openModalPost(){
+	$(".open-PostModal").click(function () {
+		$('.modal-body #bookId').val($(this).data('idpost'));
+		$('#postModal').modal('show');
 	});
-);
+};
 
 $.when(cargarUsuarios(), cargarPosts()).done(function(a1, a2, a3, a4){
 	cargarContenido();
