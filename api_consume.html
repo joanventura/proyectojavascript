@@ -1,212 +1,82 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta name="description" content="">
-	<meta name="author" content="">
-
+	
 	<title>Diplomado Javascript y CSS</title>
 	
 	<link rel="stylesheet" href="resources/css/bootstrap.min.css">
 	<script src="resources/js/jquery-3.2.1.min.js"></script>
 	<script src="resources/js/bootstrap.min.js"></script>
-
-	<link href="resources/css/reset.css" rel="stylesheet">
-	<link href="resources/css/style.css" rel="stylesheet">
-
-    <link rel="stylesheet" href="resources/css/fontawesome.min.css">
 	
-	<style>
-
-		.card-md { 
-		 box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-		  transition: all 0.3s cubic-bezier(.25,.8,.25,1); }
-		/*
-		.card-md:focus, .card-md:hover {
-			box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22); 
-		}*/
-
-		#autocomplete {border: none; border-radius: 2px; padding: 1em;}
-
-		.media{ 
-			padding: 1em 1em 0 1em;  
-			background-color: #FFF;
-			border: none;
-			}
-
-	</style>
-	
-	
-	<script>
-		var Post = function(){
-			var self = this;
-			self.id="";
-			self.usuario="";
-			self.titulo="";
-			self.body="";
-			self.favorite=0;
-		};
-		
-		var Usuario = function(){
-			var self = this;
-			self.userId="";
-			self.name="";
-			self.email="";
-		};
-		
-		
-		function agregarPost(post){
-			var imgSource="";
-			
-			if(post.favorite>=0){
-			   imgSource="resources/img/clicked.jpg";
-			}else{
-			   imgSource="resources/img/unclick.jpg";
-			}
-		
-			var rowPost='<div class="row media-list">'+
-							'<div class="col-md-12">' +
-									'<div class="media card-md">' +
-										'<input data-myval="'+ post.id + '" type="image" class="mr-3" src="'+imgSource+'" alt="Favorite" style="width: 32px; height: 32px;" data-holder-rendered="true"/>' +
-										'<div class="media-body">' +
-											'<h4 class="media-heading">'+ post.titulo + '</h4>' +
-											  post.body +
-											'<h6 class="text-right">Author: '+ post.usuario +' </h6>' +
-										'</div>' +
-									'</div>' +
-								'</div>'+
-							'</div>'+
-						  '<hr>'; 
-			
-
-
-				$('#contenido').append(rowPost);
-		};
-		
-		
-	
-		$(document).ready(function(){
-			
-			myLocalStorage = window.localStorage;
-			mySessionStorage = window.sessionStorage;
-	
-			var usuarios = [];
-			var posts = [];
-			var dbUsuarios = mySessionStorage.getItem('usuarios');
-			var dbPosts = mySessionStorage.getItem('posts');
-			var dbFavoritos = myLocalStorage.getItem('favoritos');
-			var root = 'https://jsonplaceholder.typicode.com';
-
-			if(dbUsuarios==null){
-
-				$.ajax({
-					url: root + '/users/',
-					method: 'GET'
-				}).then(function(dataUsers) {
-					mySessionStorage.setItem("usuarios", JSON.stringify(dataUsers));
-				});
-			}
-			
-			if(dbPosts==null){
-
-				$.ajax({
-					url: root + '/posts/',
-					method: 'GET'
-				}).then(function(dataPosts) {
-					mySessionStorage.setItem("posts", JSON.stringify(dataPosts));
-				});
-			}
-			
-
-			if(dbPosts!=null){
-				posts = JSON.parse(dbPosts);
-				usuarios = JSON.parse(dbUsuarios);
-				favoritos = JSON.parse(dbFavoritos);
-
-				$.each(posts, function(i,p){
-					var post= new Post();
-					
-					post.id=p.id;
-					$.each(usuarios, function(y,usr){
-						if(p.userId==usr.id){
-							post.usuario=usr.name+"("+usr.email+")";							
-						}
-					});
-					post.titulo=p.title;
-					post.body=p.body;
-					if(favoritos!=null){
-						post.favorite =favoritos.indexOf(p.id);
-					}else{
-						post.favorite =-1;
-					}
-					
-					agregarPost(post);
-				});
-			}
-			
-			$('.mr-3').click(function(){
-				var clickFavorito = $(this).data('myval');
-				var favoritos = [];
-				var existe=0;
-				
-				myLocalStorage = window.localStorage;
-
-				var dbFavoritos = myLocalStorage.getItem('favoritos');
-				if(dbFavoritos!=null){
-					favoritos = JSON.parse(dbFavoritos);
-				}
-				
-				existe=favoritos.indexOf(clickFavorito);
-				if(existe>=0){
-					favoritos.splice(existe, 1);
-					$(this).attr("src","resources/img/unclick.jpg");
-				}else{
-					favoritos.push(clickFavorito);
-					$(this).attr("src","resources/img/clicked.jpg");
-				}
-				myLocalStorage.setItem("favoritos", JSON.stringify(favoritos));
-
-			});
-			
-			
-		});
-	</script>
-
-
+	<script src="resources/js/api_consume.js"></script>
 </head>
-
-<body> 
-
+<body>
 	<div style="background-color: #090e21;  border-bottom: #ECECEC 1px solid">
-
 		<div class="container">
-
-			<div class="row">
-					
+			<div class="row">	
 				<div class="col-md-12  text-center" style="padding-top: 3rem">
-					<h1 style="font-size: 80px; color: #fff">API Consume | Javascript y CSS</h1>			  
+					<h1 style="font-size: 60px; color: #fff">API Consume | Javascript y CSS</h1>			  
 				</div>
 
 				<div class="form-group col-md-12">
 					<label for="search" style="font-size: 18px">Search:</label>
 					<input type="text" id="autocomplete" name="search" class="form-control card-md" placeholder="Type a word...">
 				</div>
-
 			</div>
-
 		</div><!-- /.container -->
-
 	</div>
-
-
-	<div class="container" id="contenido">
+	
+	<div class="container">
+		<div id="contenido">
 		
-		
-
+		</div>
 	</div>
+	
+	<!-- Modal -->
+	<div id="usuarioModal" class="modal fade" role="dialog">
+	  <div class="modal-dialog">
 
+		<!-- Modal content-->
+		<div class="modal-content">
+		  <div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">&times;</button>
+			<h4 class="modal-title">User Information</h4>
+		  </div>
+		  <div class="modal-body">
+			<p>Some text in the modal.</p>
+			 <input type="hidden" name="bookId" id="bookId" value=""/>
+		  </div>
+		  <div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		  </div>
+		</div>
 
+	  </div>
+	</div>
+	
+	<!-- Modal -->
+	<div id="postModal" class="modal fade" role="dialog">
+	  <div class="modal-dialog">
+
+		<!-- Modal content-->
+		<div class="modal-content">
+		  <div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">&times;</button>
+			<h4 class="modal-title">Post Information</h4>
+		  </div>
+		  <div class="modal-body">
+			<p>Some text in the modal.</p>
+			 <input type="hidden" name="bookId" id="bookId" value=""/>
+		  </div>
+		  <div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		  </div>
+		</div>
+
+	  </div>
+	</div>
+	
 </body>
 </html>

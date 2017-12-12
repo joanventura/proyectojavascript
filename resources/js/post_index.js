@@ -8,7 +8,7 @@ function cargarPost(){
 	}).then(function(data) {
 		//recorrer el arreglo de los posts
 		$.each(data, function(i,p){
-		
+		/*
 			var postFavoritos = [];
 			var existe=0;
 			
@@ -25,7 +25,7 @@ function cargarPost(){
 			}
 			localStorage.setItem("postFavoritos", JSON.stringify(postFavoritos));
 
-			var post = "<h1>"+p.title+"</h1>";
+			var post = "<h1>"+p.title+"</h1>";*/
 			
 			var post = "<div class='row'>"+
 							"<div class='col-md-12'>"+
