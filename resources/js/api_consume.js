@@ -65,7 +65,7 @@ function agregarPost(post){
 		  
 	var rowPost = '<div class="row">'+
 						'<div class="col-md-12">'+
-							'<h3 data-toggle="modal" class="open-PostModal" data-idpost="'+post.id+'">'+post.titulo+'</h3>'+
+							'<h3 data-toggle="modal" class="open-PostModal" data-postid="'+post.id+'">'+post.titulo+'</h3>'+
 						'</div>'+	
 					'</div>'+
 					'<div class="row">'+ 
@@ -157,7 +157,48 @@ function botonFavorito(){
 
 function openModalUsuario(){
 	$(".open-UsuarioModal").click(function () {
-		$('.modal-body #bookId').val($(this).data('userid'));
+		var userId=$(this).data('userid');
+		
+		mySessionStorage = window.sessionStorage;
+		var usuarios = [];
+		var dbUsuarios = mySessionStorage.getItem('usuarios');
+		
+		usuarios = JSON.parse(dbUsuarios);
+		
+		$.each(usuarios, function(y,usr){
+			if(userId==usr.id){
+				$('#userName').text("Name: "+usr.name);			
+				$('#userUsername').text("Username: "+usr.username);		
+				$('#userEmail').text("Email: "+usr.email);		
+				
+				$('#userAddressStreet').text("Street: "+usr.address.street);	
+				$('#userAddressSuite').text("Suite: "+usr.address.suite);	
+				$('#userAddressCity').text("City: "+usr.address.city);	
+				$('#userAddressZipcode').text("Zipcode: "+usr.address.zipcode);	
+				
+				$('#userPhone').text("Phone: "+usr.phone);	
+				$('#userWebsite').text("Website: "+usr.website);	
+				$('#userCompanyName').text("Company: "+usr.company.name);	
+				
+				var root = 'https://jsonplaceholder.typicode.com';
+				$.ajax({
+						url: root + '/posts/?userId'+userId,
+						method: 'GET'
+					}).then(function(dataPosts) {
+						var cantPost=0;
+						
+						$.each(usuarios, function(y,usr){
+							cantPost++;
+						});
+						
+						$('#userCantPost').text("Post Published: "+cantPost);	
+		
+					});
+					
+	
+			}
+		});	
+		
 		$('#usuarioModal').modal('show');
 	});
 
@@ -165,7 +206,56 @@ function openModalUsuario(){
 
 function openModalPost(){
 	$(".open-PostModal").click(function () {
-		$('.modal-body #bookId').val($(this).data('idpost'));
+		var postId=$(this).data('postid');
+		$('#postId').val(postId);
+		
+		myLocalStorage = window.localStorage;
+		mySessionStorage = window.sessionStorage;
+		var usuarios = [];
+		var dbUsuarios = mySessionStorage.getItem('usuarios');
+		var dbFavoritos = myLocalStorage.getItem('favoritos');
+		
+		usuarios = JSON.parse(dbUsuarios);
+		favoritos = JSON.parse(dbFavoritos);
+	
+		var root = 'https://jsonplaceholder.typicode.com';
+		$.ajax({
+				url: root + '/posts/'+postId,
+				method: 'GET'
+			}).then(function(dataPosts) {
+				$('#postTitle').text(dataPosts.title);
+				$('#postBody').text(dataPosts.body);
+				
+				$.each(usuarios, function(y,usr){
+					if(postId==usr.id){
+						$('#postUsuario').text(usr.name+"("+usr.email+")");						
+					}
+				});
+
+			});
+		
+		$('#rowComments').empty();	
+		//6 Comments So Far
+		$.ajax({
+				url: root + '/comments?postId='+postId,
+				method: 'GET'
+			}).then(function(dataComments) {
+				var count=0;
+				$.each(dataComments, function(i,c){
+					var rowComment='<div class="media">'+
+									  '<div class="media-body">'+
+										'<h4 class="media-heading">'+c.name+'</h4>'+
+										'<p>'+c.body+'</p>'+
+										'<p align="right">'+c.email+'</p>'+
+									  '</div>'+
+									'</div>'+
+									'<hr>';
+					count++;
+					$('#rowComments').append(rowComment);
+				});
+				$('#postCommentCount').text(count+" Comments So Far");
+			});
+			
 		$('#postModal').modal('show');
 	});
 };

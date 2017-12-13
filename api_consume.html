@@ -11,7 +11,22 @@
 	<script src="resources/js/bootstrap.min.js"></script>
 	
 	<script src="resources/js/api_consume.js"></script>
+   
 </head>
+<style>
+	.modal-header-info {
+		color:#fff;
+		padding:9px 15px;
+		border-bottom:1px solid #eee;
+		background-color: #5bc0de;
+		-webkit-border-top-left-radius: 5px;
+		-webkit-border-top-right-radius: 5px;
+		-moz-border-radius-topleft: 5px;
+		-moz-border-radius-topright: 5px;
+		 border-top-left-radius: 5px;
+		 border-top-right-radius: 5px;
+	}
+</style>
 <body>
 	<div style="background-color: #090e21;  border-bottom: #ECECEC 1px solid">
 		<div class="container">
@@ -40,14 +55,24 @@
 
 		<!-- Modal content-->
 		<div class="modal-content">
-		  <div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal">&times;</button>
-			<h4 class="modal-title">Post Information</h4>
+		  <div class="modal-header modal-header-info">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h3 class="modal-title">Post Information</h3>
 		  </div>
 		  <div class="modal-body">
-			<p>Some text in the modal.</p>
-			 <input type="hidden" name="bookId" id="bookId" value=""/>
+          	<h4 class="modal-title" id="postTitle"></h4>
+			<p id='postBody'></p>
+			<p id='postUsuario' align="right"></p>
 		  </div>
+          <ul class="list-group">
+          	<li class="list-group-item">
+                <h4 id="postCommentCount"></h4>
+                <hr>
+                <div id='rowComments'>
+                        
+                </div>
+          	</li>
+          </ul>
 		  <div class="modal-footer">
 			<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 		  </div>
@@ -64,14 +89,43 @@
 
 		<!-- Modal content-->
 		<div class="modal-content">
-		  <div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal">&times;</button>
+		  <div class="modal-header modal-header-info">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 			<h4 class="modal-title">User Information</h4>
 		  </div>
-		  <div class="modal-body">
-			<p>Some text in the modal.</p>
-			 <input type="hidden" name="bookId" id="bookId" value=""/>
+		  <div class="modal-body" id="userContent">
+          	<table width="100%">
+            	<tr>
+                	<td><p id="userName"></p></td>
+                    <td><p id="userUsername"></p></td>
+            	</tr>
+                <tr>
+                	<td><p id="userEmail"></p></td>
+                    <td></td>
+            	</tr>
+                <tr>
+                	<td><p id="userAddressStreet"></p></td>
+                    <td><p id="userAddressSuite"></p></td>
+            	</tr>
+                <tr>
+                	<td><p id="userAddressCity"></p></td>
+                    <td><p id="userAddressZipcode"></p></td>
+            	</tr>
+                <tr>
+                	<td><p id="userPhone"></p></td>
+                    <td><p id="userWebsite"></p></td>
+            	</tr>
+                <tr>
+                	<td><p id="userCompanyName"></p></td>
+                    <td></td>
+            	</tr>
+                <tr>
+                	<td><p id="userCantPost"></p></td>
+                    <td></td>
+            	</tr>
+            </table>
 		  </div>
+          	
 		  <div class="modal-footer">
 			<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 		  </div>
@@ -79,6 +133,7 @@
 
 	  </div>
 	</div>
+    
 	
 	
 </body>
