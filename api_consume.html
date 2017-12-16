@@ -11,22 +11,34 @@
 	<script src="resources/js/bootstrap.min.js"></script>
 	
 	<script src="resources/js/api_consume.js"></script>
+	
+	<style>
+		.modal-header-info {
+			color:#fff;
+			padding:9px 15px;
+			border-bottom:1px solid #eee;
+			background-color: #5bc0de;
+			-webkit-border-top-left-radius: 5px;
+			-webkit-border-top-right-radius: 5px;
+			-moz-border-radius-topleft: 5px;
+			-moz-border-radius-topright: 5px;
+			 border-top-left-radius: 5px;
+			 border-top-right-radius: 5px;
+		}
+
+		.modal-header, .titulo, .close {
+			background-color: #5cb85c;
+			color:white !important;
+			text-align: center;
+			font-size: 30px;
+		}
+		.modal-footer {
+			background-color: #f9f9f9;
+		}
+	  </style>
    
 </head>
-<style>
-	.modal-header-info {
-		color:#fff;
-		padding:9px 15px;
-		border-bottom:1px solid #eee;
-		background-color: #5bc0de;
-		-webkit-border-top-left-radius: 5px;
-		-webkit-border-top-right-radius: 5px;
-		-moz-border-radius-topleft: 5px;
-		-moz-border-radius-topright: 5px;
-		 border-top-left-radius: 5px;
-		 border-top-right-radius: 5px;
-	}
-</style>
+
 <body>
 	<div style="background-color: #090e21;  border-bottom: #ECECEC 1px solid">
 		<div class="container">
@@ -34,12 +46,20 @@
 				<div class="col-md-12  text-center" style="padding-top: 3rem">
 					<h1 style="font-size: 60px; color: #fff">API Consume | Javascript y CSS</h1>			  
 				</div>
+		
+				<div class="form-group col-md-2">
+					<button type="button" class="btn btn-success btn-lg" id="insertarPost"><span class="glyphicon glyphicon-edit"></span> New Post</button>
+				</div>
+				
+				<div class="form-group col-md-2">
+					<button type="button" class="btn btn-success btn-lg" id="insertarUsuario"><span class="glyphicon glyphicon-edit"></span> New User</button>
+				</div>
 
-				<div class="form-group col-md-12">
+				<div class="form-group col-md-8">
 					<label for="search" style="font-size: 18px">Search:</label>
 					<input type="text" id="autocomplete" name="search" class="form-control card-md" placeholder="Type a word...">
 				</div>
-			</div>
+			</div> 
 		</div><!-- /.container -->
 	</div>
 	
@@ -47,93 +67,159 @@
 		<div id="contenido">
 		
 		</div>
-	</div>
 	
-	<!-- Modal -->
-	<div id="postModal" class="modal fade" role="dialog">
-	  <div class="modal-dialog">
+	
+		<!-- Modal -->
+		<div id="postModal" class="modal fade" role="dialog">
+		  <div class="modal-dialog">
 
-		<!-- Modal content-->
-		<div class="modal-content">
-		  <div class="modal-header modal-header-info">
-			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-			<h3 class="modal-title">Post Information</h3>
-		  </div>
-		  <div class="modal-body">
-          	<h4 class="modal-title" id="postTitle"></h4>
-			<p id='postBody'></p>
-			<p id='postUsuario' align="right"></p>
-		  </div>
-          <ul class="list-group">
-          	<li class="list-group-item">
-                <h4 id="postCommentCount"></h4>
-                <hr>
-                <div id='rowComments'>
-                        
-                </div>
-          	</li>
-          </ul>
-		  <div class="modal-footer">
-			<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			<!-- Modal content-->
+			<div class="modal-content">
+			  <div class="modal-header modal-header-info">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h3 class="modal-title">Post Information</h3>
+			  </div>
+			  <div class="modal-body">
+				<h4 class="modal-title" id="postTitle"></h4>
+				<p id='postBody'></p>
+				<p id='postUsuario' align="right"></p>
+			  </div>
+			  <ul class="list-group">
+				<li class="list-group-item">
+					<h4 id="postCommentCount"></h4>
+					<hr>
+					<div id='rowComments'>
+							
+					</div>
+				</li>
+			  </ul>
+			  <div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			  </div>
+			</div>
+
 		  </div>
 		</div>
+		
+		
+		
+		<!-- Modal -->
+		<div id="usuarioModal" class="modal fade" role="dialog">
+		  <div class="modal-dialog">
 
-	  </div>
-	</div>
-	
-	
-	
-	<!-- Modal -->
-	<div id="usuarioModal" class="modal fade" role="dialog">
-	  <div class="modal-dialog">
+			<!-- Modal content-->
+			<div class="modal-content">
+			  <div class="modal-header modal-header-info">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title">User Information</h4>
+			  </div>
+			  <div class="modal-body" id="userContent">
+				<table width="100%">
+					<tr>
+						<td><p id="userName"></p></td>
+						<td><p id="userUsername"></p></td>
+					</tr>
+					<tr>
+						<td><p id="userEmail"></p></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><p id="userAddressStreet"></p></td>
+						<td><p id="userAddressSuite"></p></td>
+					</tr>
+					<tr>
+						<td><p id="userAddressCity"></p></td>
+						<td><p id="userAddressZipcode"></p></td>
+					</tr>
+					<tr>
+						<td><p id="userPhone"></p></td>
+						<td><p id="userWebsite"></p></td>
+					</tr>
+					<tr>
+						<td><p id="userCompanyName"></p></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><p id="userCantPost"></p></td>
+						<td></td>
+					</tr>
+				</table>
+			  </div>
+				
+			  <div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			  </div>
+			</div>
 
-		<!-- Modal content-->
-		<div class="modal-content">
-		  <div class="modal-header modal-header-info">
-			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-			<h4 class="modal-title">User Information</h4>
-		  </div>
-		  <div class="modal-body" id="userContent">
-          	<table width="100%">
-            	<tr>
-                	<td><p id="userName"></p></td>
-                    <td><p id="userUsername"></p></td>
-            	</tr>
-                <tr>
-                	<td><p id="userEmail"></p></td>
-                    <td></td>
-            	</tr>
-                <tr>
-                	<td><p id="userAddressStreet"></p></td>
-                    <td><p id="userAddressSuite"></p></td>
-            	</tr>
-                <tr>
-                	<td><p id="userAddressCity"></p></td>
-                    <td><p id="userAddressZipcode"></p></td>
-            	</tr>
-                <tr>
-                	<td><p id="userPhone"></p></td>
-                    <td><p id="userWebsite"></p></td>
-            	</tr>
-                <tr>
-                	<td><p id="userCompanyName"></p></td>
-                    <td></td>
-            	</tr>
-                <tr>
-                	<td><p id="userCantPost"></p></td>
-                    <td></td>
-            	</tr>
-            </table>
-		  </div>
-          	
-		  <div class="modal-footer">
-			<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 		  </div>
 		</div>
-
-	  </div>
-	</div>
+		
+		<!-- Modal -->
+		  <div class="modal fade" id="addPost" role="dialog">
+			<div class="modal-dialog">
+			
+			  <!-- Modal content-->
+			  <div class="modal-content">
+				<div class="modal-header" style="padding:35px 50px;">
+				  <button type="button" class="close" data-dismiss="modal">&times;</button>
+				  <h4><span class="glyphicon glyphicon-new-window titulo"></span> New Post</h4>
+				</div>
+				<div class="modal-body" style="padding:40px 50px;">
+				  <form role="form">
+					<div class="form-group">
+					  <label for="addTitle"> Title</label>
+					  <input type="text" class="form-control" id="addTitle" placeholder="Enter Post Title">
+					</div>
+					<div class="form-group">
+					  <label for="addBody"> Body</label>
+					  <textarea class="form-control" id="addBody" name="textarea"></textarea>
+					</div>
+					  <button class="btn btn-success btn-block" data-dismiss="modal" id="salvarPost"><span class="glyphicon glyphicon-save"></span> Save</button>
+				  </form>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-danger btn-default pull-left" data-dismiss="modal" id="salvarPost"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
+				</div>
+			  </div>
+			  
+			</div>
+		  </div> 
+		  
+		<div class="modal fade" id="addUsuario" role="dialog">
+		<div class="modal-dialog">
+		
+		  <!-- Modal content-->
+		  <div class="modal-content">
+			<div class="modal-header" style="padding:35px 50px;">
+			  <button type="button" class="close" data-dismiss="modal">&times;</button>
+			  <h4><span class="glyphicon glyphicon-lock titulo"></span> Create User</h4>
+			</div>
+			<div class="modal-body" style="padding:40px 50px;">
+			  <form role="form">
+			    <div class="form-group">
+				  <label for="addUsrname"><span class="glyphicon glyphicon-user"></span> Full Name</label>
+				  <input type="text" class="form-control" id="addUsrname" placeholder="Enter Full Name">
+				</div>
+				<div class="form-group">
+				  <label for="addEmail"><span class="glyphicon glyphicon-envelope"></span> Email</label>
+				  <input type="text" class="form-control" id="addEmail" placeholder="Enter email">
+				</div>
+				<div class="form-group">
+				  <label for="addPsw"><span class="glyphicon glyphicon-eye-open"></span> Password</label>
+				  <input type="text" class="form-control" id="addPsw" placeholder="Enter password">
+				</div>
+				  <button class="btn btn-success btn-block" data-dismiss="modal" id="salvarUsuario"><span class="glyphicon glyphicon-save"></span> Create User</button>
+			  </form>
+			</div>
+			<div class="modal-footer">
+			  <button type="submit" class="btn btn-danger btn-default pull-left" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
+			</div>
+		  </div>
+		  
+		</div>
+	  </div> 
     
+	</div>
 	
 	
 </body>

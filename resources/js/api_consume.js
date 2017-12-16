@@ -260,11 +260,69 @@ function openModalPost(){
 	});
 };
 
+
+function insertarPost(){
+	$("#insertarPost").click(function () {	
+		$('#addPost').modal('show');
+	});
+	
+	$("#salvarPost").click(function () {	
+		console.log($('#addTitle').val());
+		console.log($('#addBody').val());
+		
+		var root = 'https://jsonplaceholder.typicode.com';
+		$.ajax({
+				url: root + '/posts/',
+				method: 'POST',
+				data: JSON.stringify({
+						  title: $('#addTitle').val(),
+						  body: $('#addBody').val(),
+						  userId: 1
+						}),
+				success: function(dataPosts) {
+					console.log(dataPosts);
+				}
+			});
+
+
+	});
+};
+
+function insertarUsuario(){
+	$("#insertarUsuario").click(function () {	
+		$('#addUsuario').modal('show');
+	});
+	
+	$("#salvarUsuario").click(function () {	
+		console.log($('#addUsrname').val());
+		console.log($('#addEmail').val());
+		console.log($('#addPsw').val());
+		/*
+		var root = 'https://jsonplaceholder.typicode.com';
+		$.ajax({
+				url: root + '/users/',
+				method: 'POST',
+				data: JSON.stringify({
+						  name: $('#addUsrname').val(),
+						  email: $('#addEmail').val(),
+						  password: $('#addPsw').val()
+						}),
+				success: function(dataPosts) {
+					console.log(dataPosts);
+				}
+			});*/
+
+
+	});
+};
+
 $.when(cargarUsuarios(), cargarPosts()).done(function(a1, a2, a3, a4){
 	cargarContenido();
 	botonFavorito();
 	openModalUsuario();
 	openModalPost();
+	insertarPost();
+	insertarUsuario();
 	
 })
 
@@ -274,6 +332,7 @@ $(document).ready(function(){
 	botonFavorito();
 	openModalUsuario();
 	openModalPost();
-
+	insertarPost();
+	insertarUsuario();
 });
 
