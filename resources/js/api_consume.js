@@ -14,43 +14,72 @@ var Usuario = function(){
 	self.userId="";
 	self.name="";
 	self.email="";
+	self.token="";
 };
 
 function cargarUsuarios(){
 	mySessionStorage = window.sessionStorage;
-	var usuarios = [];
+	myLocalStorage = window.localStorage;
+	var token = [];
+	var tokenUsuario;
 	var dbUsuarios = mySessionStorage.getItem('usuarios');
-	var root = 'https://jsonplaceholder.typicode.com';
+	var dbToken = myLocalStorage.getItem('tokens');
 
-	if(dbUsuarios==null){
+	if(dbToken!=null){
+		token = JSON.parse(dbToken);
+		console.log(token);
+		$.each(token, function(i,t){
+			tokenUsuario=t.token;
+		});
+		
+		//var root = 'https://jsonplaceholder.typicode.com';
+		var root = 'http://192.168.200.245:8080';
 
-		return $.ajax({
-						url: root + '/users/',
-						method: 'GET'
-					}).then(function(dataUsers) {
-						mySessionStorage.setItem("usuarios", JSON.stringify(dataUsers));
-					});
-								
+		if(dbUsuarios==null){
+
+			return $.ajax({
+							url: root + '/users/?token='+tokenUsuario,
+							method: 'GET'
+						}).then(function(dataUsers) {
+							mySessionStorage.setItem("usuarios", JSON.stringify(dataUsers));
+						});
+									
+		}
 	}
+	
+	return false;	
 
 };
 
 function cargarPosts(){
 	mySessionStorage = window.sessionStorage;
+	myLocalStorage = window.localStorage;
+	var token = [];
+	var tokenUsuario;
 	var posts = [];
 	var dbPosts = mySessionStorage.getItem('posts');
-	var root = 'https://jsonplaceholder.typicode.com';
+	var dbToken = myLocalStorage.getItem('tokens');
 	
-	if(dbPosts==null){
+	if(dbToken!=null){
+		token = JSON.parse(dbToken);
+		$.each(token, function(i,t){
+			tokenUsuario=t.token;
+		});
+		
+		//var root = 'https://jsonplaceholder.typicode.com';
+		var root = 'http://192.168.200.245:8080';
+		
+		if(dbPosts==null){
 
-		return $.ajax({
-						url: root + '/posts/',
-						method: 'GET'
-					}).then(function(dataPosts) {
-						mySessionStorage.setItem("posts", JSON.stringify(dataPosts));
-					});
+			return $.ajax({
+							url: root + '/posts/?token='+tokenUsuario,
+							method: 'GET'
+						}).then(function(dataPosts) {
+							mySessionStorage.setItem("posts", JSON.stringify(dataPosts));
+						});
+		}
 	}
-
+	return false;
 
 };
 
@@ -71,7 +100,7 @@ function agregarPost(post){
 					'<div class="row">'+ 
 						'<div class="col-md-10">'+
 							'<a data-toggle="modal" class="open-UsuarioModal" data-userid="'+post.userId+'">'+
-								'<span class="glyphicon glyphicon-user" ></span>'+post.usuario+' - <span class="glyphicon glyphicon-envelope"></span>'+post.usuario+
+								'<span class="glyphicon glyphicon-user" ></span>'+post.usuario+' - <span class="glyphicon glyphicon-envelope"></span>'+post.email+
 							'</a>'+
 						'</div>'+
 						'<div class="col-md-2">'+
@@ -160,6 +189,56 @@ function openModalUsuario(){
 		var userId=$(this).data('userid');
 		
 		mySessionStorage = window.sessionStorage;
+		myLocalStorage = window.localStorage;
+		var token = [];
+		var tokenUsuario;
+		var usuarios = [];
+		var dbUsuarios = mySessionStorage.getItem('usuarios');
+		var dbToken = myLocalStorage.getItem('tokens');
+	
+		token = JSON.parse(dbToken);
+		$.each(token, function(i,t){
+			tokenUsuario=t.token;
+		});
+		
+		usuarios = JSON.parse(dbUsuarios);
+		
+		$.each(usuarios, function(y,usr){
+			if(userId==usr.id){
+				$('#userName').text("Name: "+usr.name);				
+				$('#userEmail').text("Email: "+usr.email);			
+				
+				//var root = 'https://jsonplaceholder.typicode.com';
+				var root = 'http://192.168.200.245:8080';
+				$.ajax({
+						url: root + '/posts/?userId='+userId+'&token='+tokenUsuario,
+						method: 'GET'
+					}).then(function(dataPosts) {
+						var cantPost=0;
+						
+						$.each(dataPosts, function(y,usr){
+							cantPost++;
+						});
+						
+						$('#userCantPost').text("Post Published: "+cantPost);	
+		
+					});
+					
+	
+			}
+		});	
+		
+		$('#usuarioModal').modal('show');
+	});
+
+};
+
+/*
+function openModalUsuario2(){
+	$(".open-UsuarioModal").click(function () {
+		var userId=$(this).data('userid');
+		
+		mySessionStorage = window.sessionStorage;
 		var usuarios = [];
 		var dbUsuarios = mySessionStorage.getItem('usuarios');
 		
@@ -202,7 +281,7 @@ function openModalUsuario(){
 		$('#usuarioModal').modal('show');
 	});
 
-};
+};*/
 
 function openModalPost(){
 	$(".open-PostModal").click(function () {
@@ -212,23 +291,34 @@ function openModalPost(){
 		myLocalStorage = window.localStorage;
 		mySessionStorage = window.sessionStorage;
 		var usuarios = [];
+		var token = [];
+		var tokenUsuario;
 		var dbUsuarios = mySessionStorage.getItem('usuarios');
 		var dbFavoritos = myLocalStorage.getItem('favoritos');
+		var dbToken = myLocalStorage.getItem('tokens');
+	
+		token = JSON.parse(dbToken);
+		$.each(token, function(i,t){
+			tokenUsuario=t.token;
+		});
 		
 		usuarios = JSON.parse(dbUsuarios);
 		favoritos = JSON.parse(dbFavoritos);
 	
-		var root = 'https://jsonplaceholder.typicode.com';
+		//var root = 'https://jsonplaceholder.typicode.com';
+		var root = 'http://192.168.200.245:8080';
 		$.ajax({
-				url: root + '/posts/'+postId,
+				url: root + '/posts/'+postId+'?token='+tokenUsuario,
 				method: 'GET'
 			}).then(function(dataPosts) {
 				$('#postTitle').text(dataPosts.title);
 				$('#postBody').text(dataPosts.body);
 				
 				$.each(usuarios, function(y,usr){
-					if(postId==usr.id){
-						$('#postUsuario').text(usr.name+"("+usr.email+")");						
+					if(dataPosts.userId==usr.id){
+						$('#postUsuario').text(usr.name+"("+usr.email+")");	
+						$('#informacionusuario').data('userid',dataPosts.userId);						
+						$('#postUserId').text(dataPosts.userId);							
 					}
 				});
 
@@ -237,7 +327,7 @@ function openModalPost(){
 		$('#rowComments').empty();	
 		//6 Comments So Far
 		$.ajax({
-				url: root + '/comments?postId='+postId,
+				url: root + '/comments?postId='+postId+'&token='+tokenUsuario,
 				method: 'GET'
 			}).then(function(dataComments) {
 				var count=0;
@@ -267,20 +357,27 @@ function insertarPost(){
 	});
 	
 	$("#salvarPost").click(function () {	
-		console.log($('#addTitle').val());
-		console.log($('#addBody').val());
+		myLocalStorage = window.localStorage;
+		var token = [];
+		var tokenUsuario;
+		var dbToken = myLocalStorage.getItem('tokens');
+	
+		token = JSON.parse(dbToken);
+		$.each(token, function(i,t){
+			tokenUsuario=t.token;
+		});
 		
-		var root = 'https://jsonplaceholder.typicode.com';
+		//var root = 'https://jsonplaceholder.typicode.com';
+		var root = 'http://192.168.200.245:8080';
 		$.ajax({
-				url: root + '/posts/',
+				url: root + '/posts/?token='+tokenUsuario,
 				method: 'POST',
 				data: JSON.stringify({
 						  title: $('#addTitle').val(),
-						  body: $('#addBody').val(),
-						  userId: 1
+						  body: $('#addBody').val()
 						}),
-				success: function(dataPosts) {
-					console.log(dataPosts);
+				success: function(dataRegistro) {
+					console.log(dataRegistro);
 				}
 			});
 
@@ -288,20 +385,52 @@ function insertarPost(){
 	});
 };
 
-function insertarUsuario(){
-	$("#insertarUsuario").click(function () {	
-		$('#addUsuario').modal('show');
+function loginUsuario(){
+	$("#logearUsuario").click(function () {	
+		$('#loginUsuario').modal('show');
+	});
+	
+	$("#signinUsuario").click(function () {	
+		console.log($('#loginEmail').val());
+		console.log($('#loginPsw').val());
+		myLocalStorage = window.localStorage;
+		
+		var token=[];
+		var dbToken = myLocalStorage.getItem('tokens');
+		
+		if(dbToken!=null){
+			token = JSON.parse(dbToken);		
+		}
+		
+		var root = 'http://192.168.200.245:8080';
+		$.ajax({
+				contentType: "application/json; charset=utf-8",
+				url: root + '/login/',
+				type: 'POST',
+				data: JSON.stringify({
+						  email: $('#loginEmail').val(),
+						  password: $('#loginPsw').val()
+						}),
+				success: function(dataLogin) {
+					console.log(dataLogin);
+					token.push(dataLogin);
+					myLocalStorage.setItem("tokens", JSON.stringify(token));
+					location.reload();
+				}
+			});	
+
 	});
 	
 	$("#salvarUsuario").click(function () {	
 		console.log($('#addUsrname').val());
 		console.log($('#addEmail').val());
 		console.log($('#addPsw').val());
-		/*
-		var root = 'https://jsonplaceholder.typicode.com';
+		
+		var root = 'http://192.168.200.245:8080';
 		$.ajax({
+				contentType: "application/json; charset=utf-8",
 				url: root + '/users/',
-				method: 'POST',
+				type: 'POST',
 				data: JSON.stringify({
 						  name: $('#addUsrname').val(),
 						  email: $('#addEmail').val(),
@@ -310,29 +439,77 @@ function insertarUsuario(){
 				success: function(dataPosts) {
 					console.log(dataPosts);
 				}
-			});*/
+			});
 
 
 	});
+	
+	$("#logoutPost").click(function () {	
+		myLocalStorage = window.localStorage;
+		var token = [];
+		var tokenUsuario;
+		var dbToken = myLocalStorage.getItem('tokens');
+	
+		token = JSON.parse(dbToken);
+		$.each(token, function(i,t){
+			tokenUsuario=t.token;
+			var root = 'http://192.168.200.245:8080';
+			$.ajax({
+					contentType: "application/json; charset=utf-8",
+					url: root + '/logout/',
+					type: 'POST',
+					data: JSON.stringify({
+							  token: tokenUsuario
+							}),
+					success: function(dataPosts) {
+						console.log(dataPosts);
+					}
+				});
+		});
+
+	});
+	
+	$(".open-RegistrarUsuarioModal").click(function () {
+		$('#addUsuario').modal('show');
+	})
 };
 
 $.when(cargarUsuarios(), cargarPosts()).done(function(a1, a2, a3, a4){
-	cargarContenido();
-	botonFavorito();
-	openModalUsuario();
-	openModalPost();
-	insertarPost();
-	insertarUsuario();
+	myLocalStorage = window.localStorage;
+	var token = [];
+	var tokenUsuario;
+	var dbToken = myLocalStorage.getItem('tokens');
+
+	loginUsuario();
+	if(dbToken!=null){	
+		cargarContenido();
+		botonFavorito();
+		openModalUsuario();
+		openModalPost();
+		insertarPost();
+		
+	}else{
+		$('#loginUsuario').modal('show');
+	}	
 	
 })
 
 
 $(document).ready(function(){
-	cargarContenido();
-	botonFavorito();
-	openModalUsuario();
-	openModalPost();
-	insertarPost();
-	insertarUsuario();
+	myLocalStorage = window.localStorage;
+	var token = [];
+	var tokenUsuario;
+	var dbToken = myLocalStorage.getItem('tokens');
+	
+	loginUsuario();
+	if(dbToken!=null){	
+		cargarContenido();
+		botonFavorito();
+		openModalUsuario();
+		openModalPost();
+		insertarPost();
+	}else{
+		$('#loginUsuario').modal('show');
+	}	
 });
 
